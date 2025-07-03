@@ -48,7 +48,7 @@ jobs:
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
           echo "Pull done"
           echo "Tag done" 
-          docker push ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ github.event.repository.name }}
+          docker push
           echo "Push done" 
       - name: Deploy production with aws CLI
         if: ${{ inputs.environment }} == 'Production'
