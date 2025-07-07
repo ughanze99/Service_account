@@ -29,13 +29,12 @@ jobs:
       - name: Pause App Runner Service for Stagging
         if: ${{ inputs.environment }} == 'Staging'
         run: |
-          aws apprunner pause-service --service-arn = "${{ vars.SERVICE_ARN }}"  # Replace with your service ARN
+          aws apprunner pause-service --service-arn "${{ vars.SERVICE_ARN }}"  # Replace with your service ARN
 
       - name: Pause App Runner Service for Production
         if: ${{ inputs.environment }} == 'Production'
         run: |
-          aws apprunner pause-service \
-            --service-arn = "${{ vars.SERVICE_ARN }}"  # Replace with your service ARN
+          aws apprunner pause-service --service-arn "${{ vars.SERVICE_ARN }}"  # Replace with your service ARN
 
       # Or to Delete the App Runner Service:
       # - name: Delete App Runner Service
