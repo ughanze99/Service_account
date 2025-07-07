@@ -1,0 +1,45 @@
+name: Stop App Runner Service
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        description: Enter the target environment for the deployment
+        options:
+        - Staging
+        - Production
+
+jobs:
+  stop_service:
+    environment: 
+      name: ${{ inputs.environment }}
+      url: ${{ vars.URL }}
+    runs-on: ubuntu-latest  # Or your preferred runner
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1  # or a newer version
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}  # Specify your AWS Region
+
+      - name: Pause App Runner Service for Stagging
+        if: ${{ inputs.environment }} == 'Staging'
+        run: |
+          aws apprunner pause-service \
+            --service-arn = "${{ vars.SERVICE_ARN }}"  # Replace with your service ARN
+
+      - name: Pause App Runner Service for Production
+        if: ${{ inputs.environment }} == 'Production'
+        run: |
+          aws apprunner pause-service \
+            --service-arn = "${{ vars.SERVICE_ARN }}"  # Replace with your service ARN
+
+      # Or to Delete the App Runner Service:
+      # - name: Delete App Runner Service
+      #   run: |
+      #     aws apprunner delete-service \
+      #       --service-arn your-apprunner-service-arn  # Replace with your service ARN
